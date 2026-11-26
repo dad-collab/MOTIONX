@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+/*
+ * MOTIONX design system: Tailwind v4 CSS-first theme.
+ * Only the tokens declared here exist in the project. Default palette is removed on purpose.
+ */
+@theme {
+  /* Colour. The site may only use these. */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-void: #04050a;
+  --color-ink: #0a0c12;
+  --color-graphite: #11141c;
+  --color-steel: #1a1f2b;
+  --color-line: #232a38;
+  --color-mist: #7d8799;
+  --color-fog: #b4bccb;
+  --color-bone: #eef1f6;
+  --color-signal: #c8ff3e;
+  --color-signal-dim: #8db32a;
+  --color-plasma: #5b6cff;
+  --color-alert: #ff5c5c;
+
+  /* Type families */
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid type scale */
+  --text-display-xl: clamp(3.5rem, 1.5rem + 9vw, 11rem);
+  --text-display-xl--line-height: 0.9;
+  --text-display-xl--letter-spacing: -0.045em;
+
+  --text-display-lg: clamp(2.75rem, 1.25rem + 6.5vw, 7.5rem);
+  --text-display-lg--line-height: 0.92;
+  --text-display-lg--letter-spacing: -0.04em;
+
+  --text-h1: clamp(2rem, 1.2rem + 3vw, 4rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.03em;
+
+  --text-h2: clamp(1.5rem, 1rem + 1.6vw, 2.5rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.02em;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.65;
+
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.6;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1rem;
+  --text-label--letter-spacing: 0.18em;
+
+  /* Easing for CSS transitions */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-void);
+    color: var(--color-bone);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-line) var(--color-void);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    min-height: 100svh;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-void);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 4px;
+  }
+}
+
+/* Film grain for the whole viewport. Pure SVG noise, no external asset. */
+@utility grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Users who ask for less motion get instant state changes. GSAP and R3F honour this in JS too. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Phase 02: stable scroll geometry and typography fitted to the hero viewport. */
+html {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+.cursor-ring,
+.cursor-dot {
+  pointer-events: none;
+  will-change: transform;
+}
+
+@utility text-hero {
+  --hero-size: clamp(2.5rem, min(12.5vw, 19svh), 13rem);
+  --indent-scale: 0.3;
+  font-size: calc(var(--hero-size) * var(--hero-fit, 1));
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+}
+
+@utility char-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+@keyframes scroll-cue {
+  0%, 100% { transform: scaleY(0.55); transform-origin: top; opacity: 0.65; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+}
+
+@utility animate-scroll-cue {
+  animation: scroll-cue 1.8s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .text-hero { --indent-scale: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-cue { animation: none !important; }
+  html { scroll-behavior: auto !important; }
+}
