@@ -47,7 +47,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           <nav aria-label="Main navigation" className="flex flex-col">
             {NAV_ITEMS.map((item, index) => (
               <div key={item.id} className="overflow-hidden border-b border-line">
-                <motion.div initial={{ yPercent: 110 }} animate={{ yPercent: 0 }} exit={{ yPercent: 110 }} transition={{ delay: reduced ? 0 : 0.08 + index * 0.07, duration: reduced ? 0 : 0.6, ease: bezier.outExpo }}>
+                <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} exit={{ y: "110%" }} transition={{ delay: reduced ? 0 : 0.08 + index * 0.07, duration: reduced ? 0 : 0.6, ease: bezier.outExpo }}>
                   <SmoothLink to={item.id} onClick={onClose} className="group flex items-center justify-between py-4 font-display text-[clamp(2.4rem,13vw,4.7rem)] leading-none tracking-[-0.06em] focus-visible:outline-signal">
                     <span>{item.label}</span><span className="font-mono text-xs tracking-normal text-signal">{String(index + 1).padStart(2, "0")}</span>
                   </SmoothLink>
